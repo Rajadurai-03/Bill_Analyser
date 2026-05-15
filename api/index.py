@@ -1,11 +1,15 @@
 from flask import Flask, request, jsonify
 import pdfplumber
 import re
-import random
-import datetime
 
 app = Flask(__name__)
 
+@app.route('/', methods=['GET'])
+@app.route('/api/analyze', methods=['GET'])
+def health_check():
+    return jsonify({"status": "Python Backend is ONLINE and ready!"}), 200
+
+@app.route('/', methods=['POST'])
 @app.route('/api/analyze', methods=['POST'])
 def analyze():
     if 'files' not in request.files:
@@ -14,21 +18,16 @@ def analyze():
     files = request.files.getlist('files')
     results = []
 
-    # Get current date to simulate historical timeline
-    current_month = datetime.datetime.now().month
-    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-
-    for i, file in enumerate(files):
-        # Base dictionary for the extracted data
+    for file in files:
+        # Default values are now exactly 0 (No more random fake data)
         extracted_data = {
             "docName": file.filename[:15],
-            "month": f"{months[(current_month - (len(files) - 1 - i)) % 12]} 2025",
-            "price": None,
-            "consumption": None,
-            "demand": None
+            "month": "Unknown Month",
+            "price": 0,
+            "consumption": 0,
+            "demand": 0
         }
 
-        # Attempt to read PDF with pdfplumber
         try:
             with pdfplumber.open(file) as pdf:
                 full_text = ""
@@ -37,30 +36,31 @@ def analyze():
                     if extracted:
                         full_text += extracted + "\n"
 
-            # Try Regex to find exact values
-            price_match = re.search(r"Payable.*?₹?\s*([\d,]+(?:\.\d{1,2})?)", full_text, re.IGNORECASE)
-            if price_match: extracted_data["price"] = float(price_match.group(1).replace(",", ""))
+            # 1. Extract Month (Hunts for 'November-2025' or 'NOV-2025')
+            month_match = re.search(r"([a-zA-Z]+-20\d{2})", full_text)
+            if month_match:
+                extracted_data["month"] = month_match.group(1)
 
-            cons_match = re.search(r"Consumed.*?([\d,]+)", full_text, re.IGNORECASE)
-            if cons_match: extracted_data["consumption"] = int(cons_match.group(1).replace(",", ""))
+            # 2. Extract Price (Hunts for 'Net Payable' or 'Amount Payable')
+            price_match = re.search(r"(?:Payable|Net Bill Amount|Net Amount).*?₹?\s*([\d,]+(?:\.\d{1,2})?)", full_text, re.IGNORECASE)
+            if price_match: 
+                extracted_data["price"] = float(price_match.group(1).replace(",", ""))
 
-            demand_match = re.search(r"Demand.*?([\d,]+)\s*KVA", full_text, re.IGNORECASE)
-            if demand_match: extracted_data["demand"] = int(demand_match.group(1).replace(",", ""))
+            # 3. Extract Consumption (Hunts for 'Energy Consumed (KWH)' or just large KWH numbers)
+            cons_match = re.search(r"(?:Energy Consumed|KWH|Total Units).*?(?:[:\s])([\d,]+)", full_text, re.IGNORECASE)
+            if cons_match: 
+                extracted_data["consumption"] = int(cons_match.group(1).replace(",", ""))
+
+            # 4. Extract Peak Demand (Hunts for 'Billing Demand' or 'Cont. Demand')
+            demand_match = re.search(r"(?:Billing Demand|Cont\.? Demand|Demand).*?(?:[:\s])([\d,]+)", full_text, re.IGNORECASE)
+            if demand_match: 
+                extracted_data["demand"] = int(demand_match.group(1).replace(",", ""))
 
         except Exception as e:
-            pass # Move to fallback logic below if PDF is unreadable (e.g. scanned image)
-
-        # Fallback logic to ensure UI functionality continues if PDF regex fails
-        if extracted_data["price"] is None:
-            random_fluctuation = random.random()
-            extracted_data["price"] = 5000000 + int(random_fluctuation * 1500000)
-            extracted_data["consumption"] = 1000000 + int(random_fluctuation * 300000)
-            extracted_data["demand"] = 2400 + int(random_fluctuation * 300)
+            print(f"Extraction failed for {file.filename}: {str(e)}")
 
         results.append(extracted_data)
 
     return jsonify(results)
 
-# Application entry point for Vercel Serverless
-if __name__ == '__main__':
-    app.run(debug=True)
+app.debug = True
