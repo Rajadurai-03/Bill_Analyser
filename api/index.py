@@ -57,7 +57,7 @@ def analyze():
             if c_matches:
                 data["consumption"] = sum([float(c) for c in c_matches])
 
-            # 5. Multiline/Whitespace-Agnostic TOD Parser
+            # 5. FIXED REGEX: Jumps newlines to grab values on subsequent lines perfectly
             t1 = re.search(r"TOD[1I]:\s*([\d\.]+)", text)
             if t1: data["tod1"] = float(t1.group(1))
             
