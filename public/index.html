@@ -140,10 +140,11 @@
                         <canvas id="costChart"></canvas>
                     </div>
                 </div>
-                <div class="glass-card p-6 rounded-3xl premium-shadow flex flex-col">
+                
+                <div class="glass-card p-6 rounded-3xl premium-shadow flex flex-col h-[360px]">
                     <h3 class="text-base font-bold text-slate-800 mb-1">Time of Day (TOD) Profile</h3>
-                    <p class="text-[11px] text-slate-500 mb-6 uppercase tracking-wider font-semibold">Peak vs Off-Peak Usage</p>
-                    <div class="relative w-full min-h-[260px] flex items-center justify-center" id="tod-chart-container">
+                    <p class="text-[11px] text-slate-500 mb-4 uppercase tracking-wider font-semibold">Peak vs Off-Peak Usage</p>
+                    <div class="relative w-full h-[260px] flex items-center justify-center" id="tod-chart-container">
                         <canvas id="todChart"></canvas>
                     </div>
                 </div>
@@ -313,6 +314,8 @@
             generateBottomInsights(dataArray, sumPrice, sumCons, peakDemandItem, sumTod1, sumTod2, sumTod3, sumTod4);
             renderTrendCharts(dataArray);
             renderDoughnutChart([sumBaseFixed, sumDemandSur, sumEnergy, Math.abs(sumSubsidies)]);
+            
+            // Trigger rendering with safe window sizing boundaries
             renderTodChart([sumTod1, sumTod2, sumTod3, sumTod4]);
             
             let breakdownData = [
@@ -325,24 +328,41 @@
             populateTables(dataArray, breakdownData);
         }
 
+        // FIXED TOD INJECTION PIPELINE TO STOP WHITE CANVAS FLICKERING
         function renderTodChart(chartData) {
             const container = document.getElementById('tod-chart-container');
-            container.innerHTML = `<canvas id="todChart"></canvas>`;
-
-            const todCtx = document.getElementById('todChart').getContext('2d');
-            if (todDoughnutChartInstance) todDoughnutChartInstance.destroy();
-            todDoughnutChartInstance = new Chart(todCtx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['TOD1 (Rebate Zone)', 'TOD2 (Peak Surcharge)', 'TOD3 (Off-Peak Rebate)', 'TOD4 (Evening Surcharge)'],
-                    datasets: [{
-                        data: chartData,
-                        backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'],
-                        borderWidth: 2, borderColor: '#ffffff', hoverOffset: 4
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 10, font: { size: 10, family: 'Inter' } } } } }
-            });
+            
+            // Re-allocate standard absolute structural canvas with clear width/height definitions
+            container.innerHTML = `<canvas id="todChart" style="width:100%; height:100%; max-height:240px;"></canvas>`;
+            
+            // Minor execution timeout lets the UI system correctly finalize grid blocks before initializing graphics
+            setTimeout(() => {
+                const todCtx = document.getElementById('todChart').getContext('2d');
+                if (todDoughnutChartInstance) todDoughnutChartInstance.destroy();
+                
+                todDoughnutChartInstance = new Chart(todCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['TOD1 (Rebate Zone)', 'TOD2 (Peak Surcharge)', 'TOD3 (Off-Peak Rebate)', 'TOD4 (Evening Surcharge)'],
+                        datasets: [{
+                            data: chartData,
+                            backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'],
+                            borderWidth: 2, borderColor: '#ffffff', hoverOffset: 4
+                        }]
+                    },
+                    options: { 
+                        responsive: true, 
+                        maintainAspectRatio: false, 
+                        cutout: '55%', 
+                        plugins: { 
+                            legend: { 
+                                position: 'bottom', 
+                                labels: { usePointStyle: true, padding: 8, font: { size: 10, family: 'Inter' } } 
+                            } 
+                        } 
+                    }
+                });
+            }, 50);
         }
 
         function generateBottomInsights(data, sumPrice, sumCons, peak, t1, t2, t3, t4) {
@@ -355,7 +375,7 @@
             summaryDiv.innerHTML = `
                 <div class="p-4 bg-white/5 rounded-xl border border-white/10">
                     <h4 class="text-xs text-indigo-200 uppercase tracking-wider mb-2">Usage & Efficiency</h4>
-                    <p class="text-sm font-medium leading-relaxed">Facility drew <span class="text-white font-bold">${formatNumber(sumCons)} kWh</span> at an effective blended rate of <span class="text-white font-bold">₹${avgRate}/kWh</span>.</p>
+                    <p class="text-sm font-medium leading-relaxed">Company drew <span class="text-white font-bold">${formatNumber(sumCons)} kWh</span> at an effective blended rate of <span class="text-white font-bold">₹${avgRate}/kWh</span>.</p>
                 </div>
                 <div class="p-4 bg-white/5 rounded-xl border border-white/10">
                     <h4 class="text-xs text-indigo-200 uppercase tracking-wider mb-2">TOD Load Shifting</h4>
