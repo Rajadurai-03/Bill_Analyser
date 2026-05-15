@@ -70,12 +70,6 @@
             </div>
         </section>
 
-        <section id="executive-summary" class="hidden glass-card p-6 rounded-3xl premium-shadow bg-gradient-to-br from-slate-900 to-indigo-950 text-white">
-            <h3 class="text-sm font-bold text-indigo-300 uppercase tracking-widest mb-4 border-b border-indigo-800 pb-2">Executive Bill Summary</h3>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="summary-content">
-                </div>
-        </section>
-
         <section id="metrics-section" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="glass-card p-6 rounded-3xl premium-shadow hover-lift flex flex-col justify-between relative overflow-hidden border-t-4 border-t-indigo-500">
                 <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Total Payable (Selected)</span>
@@ -97,14 +91,6 @@
                 <span id="metric-pf" class="text-3xl font-extrabold text-emerald-500 my-1 tracking-tight">0.99</span>
                 <span class="text-xs text-emerald-700 font-semibold bg-emerald-50 w-max px-2 py-1 rounded mt-2">Highly Efficient</span>
             </div>
-        </section>
-
-        <section id="insights-section" class="hidden glass-card p-6 rounded-3xl premium-shadow bg-gradient-to-br from-indigo-50/50 to-white">
-            <div class="flex items-center gap-2 mb-4">
-                <div class="p-1.5 bg-indigo-100 rounded-md"><svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                <h3 class="text-sm font-bold text-indigo-900 uppercase tracking-widest">AI-Driven Automated Insights</h3>
-            </div>
-            <div id="dynamic-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm"></div>
         </section>
 
         <section id="visual-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -150,7 +136,7 @@
                 <div class="glass-card p-6 rounded-3xl premium-shadow flex flex-col">
                     <h3 class="text-base font-bold text-slate-800 mb-1">Time of Day (TOD) Profile</h3>
                     <p class="text-[11px] text-slate-500 mb-6 uppercase tracking-wider font-semibold">Peak vs Off-Peak Usage</p>
-                    <div class="relative w-full min-h-[260px] flex items-center justify-center">
+                    <div class="relative w-full min-h-[260px] flex items-center justify-center" id="tod-chart-container">
                         <canvas id="todChart"></canvas>
                     </div>
                 </div>
@@ -159,11 +145,29 @@
 
         <section id="data-tables-section" class="hidden glass-card rounded-3xl premium-shadow overflow-hidden">
             <div class="flex border-b border-slate-200 bg-slate-50/50 overflow-x-auto p-2 gap-2">
-                <button onclick="switchTab('history-tab')" id="btn-history-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-bold text-sm bg-white shadow-sm rounded-xl text-indigo-700 transition-all">Duration Ledger</button>
-                <button onclick="switchTab('billing-tab')" id="btn-billing-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 transition-all">Aggregate Billing</button>
+                <button onclick="switchTab('summary-tab')" id="btn-summary-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-bold text-sm bg-white shadow-sm rounded-xl text-indigo-700 transition-all">Executive Summary & Insights</button>
+                <button onclick="switchTab('history-tab')" id="btn-history-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 transition-all">Duration Ledger</button>
+                <button onclick="switchTab('billing-tab')" id="btn-billing-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 transition-all">Aggregate Billing Items</button>
             </div>
 
-            <div id="history-tab" class="tab-content block p-6 overflow-x-auto">
+            <div id="summary-tab" class="tab-content block p-6">
+                <div class="bg-gradient-to-br from-slate-900 to-indigo-950 rounded-2xl p-6 text-white mb-6">
+                    <h3 class="text-sm font-bold text-indigo-300 uppercase tracking-widest mb-4 border-b border-indigo-800 pb-2">Executive Bill Summary</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="summary-content">
+                        </div>
+                </div>
+                
+                <div class="bg-indigo-50/50 rounded-2xl p-6 border border-indigo-100">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="p-1.5 bg-indigo-100 rounded-md"><svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                        <h3 class="text-sm font-bold text-indigo-900 uppercase tracking-widest">AI-Driven Automated Insights</h3>
+                    </div>
+                    <div id="dynamic-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-700">
+                        </div>
+                </div>
+            </div>
+
+            <div id="history-tab" class="tab-content hidden p-6 overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead>
                         <tr class="border-b border-slate-200 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
@@ -190,6 +194,7 @@
                     <tbody id="billing-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
                 </table>
             </div>
+
         </section>
 
     </main>
@@ -239,9 +244,7 @@
                 
                 document.getElementById('upload-prompt').classList.add('hidden');
                 document.getElementById('filter-section').classList.remove('hidden');
-                document.getElementById('executive-summary').classList.remove('hidden');
                 document.getElementById('metrics-section').classList.remove('hidden');
-                document.getElementById('insights-section').classList.remove('hidden');
                 document.getElementById('visual-section').classList.remove('hidden');
                 document.getElementById('data-tables-section').classList.remove('hidden');
 
@@ -314,8 +317,8 @@
                 demandSub.className = "text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider mt-2";
             }
 
-            generateExecutiveSummary(sumPrice, sumCons, peakDemandItem, sumTod1, sumTod2, sumTod3, sumTod4);
-            generateInsights(dataArray, sumPrice, sumCons, peakDemandItem);
+            // Generate Bottom Tab Content
+            generateBottomInsights(dataArray, sumPrice, sumCons, peakDemandItem, sumTod1, sumTod2, sumTod3, sumTod4);
             
             renderTrendCharts(dataArray);
             renderDoughnutChart([sumBaseFixed, sumDemandSur, sumEnergy, Math.abs(sumSubsidies)]);
@@ -331,35 +334,33 @@
             populateTables(dataArray, breakdownData);
         }
 
-        function generateExecutiveSummary(sumPrice, sumCons, peak, t1, t2, t3, t4) {
+        // --- NEW: Combined Bottom Insights Generator ---
+        function generateBottomInsights(data, sumPrice, sumCons, peak, t1, t2, t3, t4) {
+            // 1. Generate Executive Summary
             const summaryDiv = document.getElementById('summary-content');
             const totalTod = t1 + t2 + t3 + t4;
             const offPeakUnits = t1 + t3; // Rebate zones
-            const peakUnits = t2 + t4;    // Surcharge zones
             const offPeakPercent = totalTod > 0 ? ((offPeakUnits / totalTod) * 100).toFixed(1) : 0;
             const avgRate = sumCons > 0 ? (sumPrice / sumCons).toFixed(2) : 0;
 
             summaryDiv.innerHTML = `
                 <div class="p-4 bg-white/5 rounded-xl border border-white/10">
                     <h4 class="text-xs text-indigo-200 uppercase tracking-wider mb-2">Usage & Efficiency</h4>
-                    <p class="text-sm font-medium">Facility drew <span class="text-white font-bold">${formatNumber(sumCons)} kWh</span> at an effective blended rate of <span class="text-white font-bold">₹${avgRate}/kWh</span>.</p>
+                    <p class="text-sm font-medium leading-relaxed">Facility drew <span class="text-white font-bold">${formatNumber(sumCons)} kWh</span> at an effective blended rate of <span class="text-white font-bold">₹${avgRate}/kWh</span>.</p>
                 </div>
                 <div class="p-4 bg-white/5 rounded-xl border border-white/10">
                     <h4 class="text-xs text-indigo-200 uppercase tracking-wider mb-2">TOD Load Shifting</h4>
-                    <p class="text-sm font-medium"><span class="text-emerald-400 font-bold">${offPeakPercent}%</span> of total power was consumed during Off-Peak (Rebate) hours, saving significant costs.</p>
+                    <p class="text-sm font-medium leading-relaxed"><span class="text-emerald-400 font-bold">${offPeakPercent}%</span> of total power was consumed during Off-Peak (Rebate) hours, saving significant costs.</p>
                 </div>
                 <div class="p-4 ${peak.demand > 2500 ? 'bg-rose-500/20 border-rose-500/50' : 'bg-white/5 border-white/10'} rounded-xl border">
                     <h4 class="text-xs ${peak.demand > 2500 ? 'text-rose-200' : 'text-indigo-200'} uppercase tracking-wider mb-2">Demand Management</h4>
-                    <p class="text-sm font-medium">Peak demand hit <span class="text-white font-bold">${peak.demand} kVA</span>. ${peak.demand > 2500 ? 'This breached the 2500 kVA limit, incurring penalties.' : 'Safely within 2500 kVA contract limits.'}</p>
+                    <p class="text-sm font-medium leading-relaxed">Peak demand hit <span class="text-white font-bold">${peak.demand} kVA</span>. ${peak.demand > 2500 ? 'This breached the 2500 kVA limit, incurring severe penalties.' : 'Safely within 2500 kVA contract limits.'}</p>
                 </div>
             `;
-        }
 
-        function generateInsights(data, sumPrice, sumCons, peak) {
-            const container = document.getElementById('dynamic-insights');
-            const avgRate = sumCons > 0 ? (sumPrice / sumCons).toFixed(2) : 0;
-            
-            let html = `
+            // 2. Generate AI Insights
+            const insightsContainer = document.getElementById('dynamic-insights');
+            let insightsHtml = `
                 <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm border-l-4 border-l-indigo-500">
                     <span class="block font-bold text-slate-800 mb-1">Cost Trajectory</span>
                     Based on standard industrial metrics, maintaining a rate of <b>₹${avgRate} per kWh</b> requires strict adherence to Power Factor norms (0.99) to keep incentives active.
@@ -369,19 +370,19 @@
                 const diff = data[data.length-1].price - data[0].price;
                 const pct = data[0].price > 0 ? Math.abs((diff/data[0].price)*100).toFixed(1) : 0;
                 const isUp = diff > 0;
-                html += `
+                insightsHtml += `
                 <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm border-l-4 ${isUp ? 'border-l-rose-500' : 'border-l-emerald-500'}">
                     <span class="block font-bold text-slate-800 mb-1">Volatility Check</span>
                     Net billing costs have <b>${isUp ? 'increased' : 'decreased'} by ${pct}%</b> between the start and end of this timeframe.
                 </div>`;
             } else {
-                html += `
+                insightsHtml += `
                 <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm border-l-4 ${peak.demand > 2500 ? 'border-l-rose-500' : 'border-l-emerald-500'}">
                     <span class="block font-bold text-slate-800 mb-1">Demand Compliance Alert</span>
                     ${peak.demand > 2500 ? `Capacity was exceeded by <b>${peak.demand - 2500} kVA</b>. Immediate load-smoothing is recommended to stop financial leakage.` : `Peak demand safely respected limits. No excess surcharges triggered.`}
                 </div>`;
             }
-            container.innerHTML = html;
+            insightsContainer.innerHTML = insightsHtml;
         }
 
         function renderTrendCharts(data) {
@@ -476,6 +477,17 @@
         }
 
         function renderTodChart(chartData) {
+            const container = document.getElementById('tod-chart-container');
+            const total = chartData.reduce((a, b) => a + b, 0);
+            
+            // Safety check: if no TOD data is found, show a message instead of a blank invisible chart
+            if (total === 0) {
+                container.innerHTML = `<p class="text-slate-400 text-xs italic">TOD data not found in this billing format.</p>`;
+                return;
+            } else {
+                container.innerHTML = `<canvas id="todChart"></canvas>`;
+            }
+
             const todCtx = document.getElementById('todChart').getContext('2d');
             if (todDoughnutChartInstance) todDoughnutChartInstance.destroy();
             todDoughnutChartInstance = new Chart(todCtx, {
