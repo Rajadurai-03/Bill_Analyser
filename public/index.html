@@ -230,7 +230,7 @@
                 applyFilter('all');
                 
             } catch (error) {
-                document.getElementById('upload-prompt').innerHTML = `<h2 class="text-xl font-bold text-rose-600">Backend Error: Ensure vercel.json and api/index.py are deployed correctly.</h2>`;
+                document.getElementById('upload-prompt').innerHTML = `<h2 class="text-xl font-bold text-rose-600">Backend Error: Check Vercel logs.</h2>`;
             }
         }
 
@@ -267,6 +267,7 @@
             const sumCons = dataArray.reduce((acc, val) => acc + val.consumption, 0);
             const peakDemandItem = dataArray.reduce((max, obj) => obj.demand > max.demand ? obj : max, dataArray[0]);
             
+            // ACCURATE FIXED CHARGE MATH (Pulls directly from Python payload, NO fake math)
             const sumBaseFixed = dataArray.reduce((acc, val) => acc + val.fixed_charges, 0);
             const sumDemandSur = dataArray.reduce((acc, val) => acc + val.demand_penalty, 0);
             const sumEnergy = dataArray.reduce((acc, val) => acc + val.energy_charges, 0);
