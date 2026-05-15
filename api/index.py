@@ -57,22 +57,21 @@ def analyze():
             if c_matches:
                 data["consumption"] = sum([float(c) for c in c_matches])
 
-            # 5. Extract TOD (Fixes the TODI / TOD1 OCR bug)
-            t1 = re.search(r"TOD[1I]:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            # 5. Multiline/Whitespace-Agnostic TOD Parser
+            t1 = re.search(r"TOD[1I]:\s*([\d\.]+)", text)
             if t1: data["tod1"] = float(t1.group(1))
             
-            t2 = re.search(r"TOD2:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            t2 = re.search(r"TOD2:\s*([\d\.]+)", text)
             if t2: data["tod2"] = float(t2.group(1))
             
-            t3 = re.search(r"TOD3:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            t3 = re.search(r"TOD3:\s*([\d\.]+)", text)
             if t3: data["tod3"] = float(t3.group(1))
             
-            t4 = re.search(r"TOD4:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            t4 = re.search(r"TOD4:\s*([\d\.]+)", text)
             if t4: data["tod4"] = float(t4.group(1))
 
-            # 6. Cost Structure Engine
+            # 6. Cost Engine Math
             data["fixed_charges"] = 2500 * 631 
-            
             if data["demand"] > 2500:
                 data["demand_penalty"] = (data["demand"] - 2500) * 631 * 1.3 
                 
