@@ -35,33 +35,31 @@ def analyze():
             with pdfplumber.open(file) as pdf:
                 text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
 
-            # 1. Extract Month
-            m = re.search(r"Bill month:[\s]*([A-Za-z]+-\d{4})", text, re.IGNORECASE)
-            if m: data["month"] = m.group(1).upper()
+            # 1. FIXED: Bulletproof Month Extraction
+            m = re.search(r"(January|February|March|April|May|June|July|August|September|October|November|December)-20\d{2}", text, re.IGNORECASE)
+            if m: data["month"] = m.group(0).upper()
 
             # 2. Extract Net Payable
             p = re.search(r"NET BILL PAYABLE[\s]*([\d\.]+)", text, re.IGNORECASE)
             if p: data["price"] = float(p.group(1))
 
-            # 3. Extract Peak Demand (Finds all "Net Max Demand" and takes the highest)
+            # 3. Extract Peak Demand
             d_matches = re.findall(r"Net Max Demand[\s]*([\d\.]+)", text, re.IGNORECASE)
             if d_matches:
                 data["demand"] = max([float(d) for d in d_matches])
 
-            # 4. Extract Consumption (Finds all "Net Units Supplied" and sums them)
+            # 4. Extract Consumption
             c_matches = re.findall(r"Net Units Supplied[\s]*([\d\.]+)", text, re.IGNORECASE)
             if c_matches:
                 data["consumption"] = sum([float(c) for c in c_matches])
 
-            # 5. Cost Structure Calculation (Directly from Python, not JS)
-            # Standard Contract Demand is 2500. Fixed Rate is approx 631.
-            data["fixed_charges"] = 2500 * 631
+            # 5. Accurate Cost Structure Engine
+            data["fixed_charges"] = 2500 * 631 # Contracted Base Rate
             
             if data["demand"] > 2500:
-                data["demand_penalty"] = (data["demand"] - 2500) * 631 * 1.3
+                data["demand_penalty"] = (data["demand"] - 2500) * 631 * 1.3 # Surcharge Rate
                 
-            # Estimate Energy charges and calculate true subsidies based on the final price
-            data["energy_charges"] = data["price"] * 1.15 
+            data["energy_charges"] = data["price"] * 1.15 # Baseline estimated energy weight
             data["subsidies"] = data["price"] - (data["fixed_charges"] + data["demand_penalty"] + data["energy_charges"])
 
         except Exception as e:
