@@ -28,14 +28,18 @@ def analyze():
             "fixed_charges": 0.0,
             "energy_charges": 0.0,
             "demand_penalty": 0.0,
-            "subsidies": 0.0
+            "subsidies": 0.0,
+            "tod1": 0.0,
+            "tod2": 0.0,
+            "tod3": 0.0,
+            "tod4": 0.0
         }
 
         try:
             with pdfplumber.open(file) as pdf:
                 text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
 
-            # 1. FIXED: Bulletproof Month Extraction
+            # 1. Month Extraction
             m = re.search(r"(January|February|March|April|May|June|July|August|September|October|November|December)-20\d{2}", text, re.IGNORECASE)
             if m: data["month"] = m.group(0).upper()
 
@@ -53,13 +57,26 @@ def analyze():
             if c_matches:
                 data["consumption"] = sum([float(c) for c in c_matches])
 
-            # 5. Accurate Cost Structure Engine
-            data["fixed_charges"] = 2500 * 631 # Contracted Base Rate
+            # 5. Extract TOD (Time of Day) Usage
+            t1 = re.search(r"TOD1:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            if t1: data["tod1"] = float(t1.group(1))
+            
+            t2 = re.search(r"TOD2:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            if t2: data["tod2"] = float(t2.group(1))
+            
+            t3 = re.search(r"TOD3:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            if t3: data["tod3"] = float(t3.group(1))
+            
+            t4 = re.search(r"TOD4:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            if t4: data["tod4"] = float(t4.group(1))
+
+            # 6. Cost Structure Engine
+            data["fixed_charges"] = 2500 * 631 
             
             if data["demand"] > 2500:
-                data["demand_penalty"] = (data["demand"] - 2500) * 631 * 1.3 # Surcharge Rate
+                data["demand_penalty"] = (data["demand"] - 2500) * 631 * 1.3 
                 
-            data["energy_charges"] = data["price"] * 1.15 # Baseline estimated energy weight
+            data["energy_charges"] = data["price"] * 1.15 
             data["subsidies"] = data["price"] - (data["fixed_charges"] + data["demand_penalty"] + data["energy_charges"])
 
         except Exception as e:
