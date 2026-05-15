@@ -57,20 +57,21 @@ def analyze():
             if c_matches:
                 data["consumption"] = sum([float(c) for c in c_matches])
 
-            # 5. FIXED REGEX: Jumps newlines to grab values on subsequent lines perfectly
-            t1 = re.search(r"TOD[1I]:\s*([\d\.]+)", text)
+            # 5. BULLETPROOF MULTI-LINE TOD EXTRACTION ENGINE
+            # This captures the label and then pulls the very first floating-point number it meets below it.
+            t1 = re.search(r"TOD[1I]:?[\s\S]*?([\d\.]+)", text)
             if t1: data["tod1"] = float(t1.group(1))
             
-            t2 = re.search(r"TOD2:\s*([\d\.]+)", text)
+            t2 = re.search(r"TOD2:?[\s\S]*?([\d\.]+)", text)
             if t2: data["tod2"] = float(t2.group(1))
             
-            t3 = re.search(r"TOD3:\s*([\d\.]+)", text)
+            t3 = re.search(r"TOD3:?[\s\S]*?([\d\.]+)", text)
             if t3: data["tod3"] = float(t3.group(1))
             
-            t4 = re.search(r"TOD4:\s*([\d\.]+)", text)
+            t4 = re.search(r"TOD4:?[\s\S]*?([\d\.]+)", text)
             if t4: data["tod4"] = float(t4.group(1))
 
-            # 6. Cost Engine Math
+            # 6. Cost Architecture Calculations
             data["fixed_charges"] = 2500 * 631 
             if data["demand"] > 2500:
                 data["demand_penalty"] = (data["demand"] - 2500) * 631 * 1.3 
