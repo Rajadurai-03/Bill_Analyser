@@ -57,8 +57,8 @@ def analyze():
             if c_matches:
                 data["consumption"] = sum([float(c) for c in c_matches])
 
-            # 5. Extract TOD (Time of Day) Usage
-            t1 = re.search(r"TOD1:[\s]*([\d\.]+)", text, re.IGNORECASE)
+            # 5. Extract TOD (Fixes the TODI / TOD1 OCR bug)
+            t1 = re.search(r"TOD[1I]:[\s]*([\d\.]+)", text, re.IGNORECASE)
             if t1: data["tod1"] = float(t1.group(1))
             
             t2 = re.search(r"TOD2:[\s]*([\d\.]+)", text, re.IGNORECASE)
