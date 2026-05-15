@@ -1,25 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="transition-colors duration-200">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium EB Analytics Pro</title>
+    <title>Raja Power Analytics Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+        }
+    </script>
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; }
         .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); border: 1px solid rgba(226, 232, 240, 0.8); }
+        .dark .glass-card { background: rgba(15, 23, 42, 0.95); border: 1px solid rgba(51, 65, 85, 0.8); }
         .premium-shadow { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 0 3px rgba(0,0,0,0.02); }
+        .dark .premium-shadow { box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5); }
         .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
         .hover-lift:hover { transform: translateY(-3px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08); }
         ::-webkit-scrollbar { height: 6px; width: 6px; }
         ::-webkit-scrollbar-track { background: #f1f5f9; border-radius: 4px; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
-        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
-<body class="text-slate-800 antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 antialiased min-h-screen flex flex-col transition-colors duration-200">
 
     <header class="bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white sticky top-0 z-50 shadow-xl border-b border-indigo-500/20">
         <div class="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
@@ -27,42 +33,47 @@
                 <div id="current-datetime" class="text-[10px] text-indigo-300 mb-1 font-semibold tracking-widest uppercase"></div>
                 <h1 class="text-2xl font-extrabold tracking-tight flex items-center gap-2">
                     <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                    Volt<span class="text-indigo-400 font-light">Sight</span> Pro
+                    RJ <span class="text-indigo-400 font-light">Power Analytics Pro</span>
                 </h1>
-                <p class="text-xs text-slate-400 mt-0.5">RJ Power Analtyics | Advanced Enterprise Analyzer</p>
+                <p class="text-xs text-indigo-200/70 mt-0.5">Advanced Enterprise Energy Analyzer Suite</p>
             </div>
             <div class="text-right flex items-center gap-4">
-                <label for="file-upload" class="cursor-pointer bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-[0_0_15px_rgba(79,70,229,0.4)] transition-all inline-flex items-center gap-2 ring-1 ring-indigo-400/50">
+                <button onclick="toggleTheme()" class="bg-slate-800 dark:bg-slate-700 hover:bg-slate-700 dark:hover:bg-slate-600 text-slate-100 p-2.5 rounded-xl border border-slate-700 dark:border-slate-600 transition-all shadow-md flex items-center justify-center">
+                    <svg id="theme-sun" class="w-5 h-5 hidden text-amber-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M14 12a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    <svg id="theme-moon" class="w-5 h-5 text-indigo-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+
+                <label for="file-upload" class="cursor-pointer bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm px-5 py-2.5 rounded-xl shadow-lg transition-all inline-flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path></svg>
                     Upload Documents
                 </label>
-                <input id="file-upload" type="file" multiple accept=".pdf,.csv,.xml" class="hidden" onchange="handleFiles(this.files)">
+                <input id="file-upload" type="file" multiple accept=".pdf" class="hidden" onchange="handleFiles(this.files)">
             </div>
         </div>
     </header>
 
     <main class="max-w-7xl mx-auto px-6 py-8 space-y-8 w-full flex-grow">
         
-        <div id="upload-prompt" class="w-full h-[60vh] flex flex-col items-center justify-center glass-card rounded-3xl premium-shadow border-dashed border-2 border-slate-300">
-            <div class="bg-indigo-50 p-6 rounded-full mb-6">
+        <div id="upload-prompt" class="w-full h-[60vh] flex flex-col items-center justify-center glass-card rounded-3xl premium-shadow border-dashed border-2 border-slate-300 dark:border-slate-700">
+            <div class="bg-indigo-50 dark:bg-slate-800 p-6 rounded-full mb-6">
                 <svg class="w-16 h-16 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
             </div>
-            <h2 class="text-2xl font-extrabold text-slate-800">Workspace Empty</h2>
-            <p class="text-slate-500 font-medium text-sm mt-2 max-w-md text-center">Upload historical electricity bills to unlock AI-driven insights and exact extractions.</p>
+            <h2 class="text-2xl font-extrabold">Workspace Empty</h2>
+            <p class="text-slate-500 dark:text-slate-400 font-medium text-sm mt-2 max-w-md text-center">Upload electrical billing documents to parse telemetry and load summaries.</p>
         </div>
 
         <section id="filter-section" class="hidden glass-card p-4 rounded-2xl premium-shadow flex flex-col sm:flex-row items-center justify-between gap-4 border-l-4 border-l-indigo-500">
             <div class="flex items-center gap-3">
-                <div class="bg-indigo-100 text-indigo-700 p-2 rounded-lg">
+                <div class="bg-indigo-100 dark:bg-slate-800 text-indigo-700 dark:text-indigo-400 p-2 rounded-lg">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                 </div>
                 <div>
-                    <h3 class="font-bold text-slate-800 text-sm">Analysis Timeframe</h3>
-                    <p class="text-xs text-slate-500">Select duration to dynamically update all metrics</p>
+                    <h3 class="font-bold text-sm">Analysis Timeframe</h3>
+                    <p class="text-xs text-slate-500 dark:text-slate-400">Select duration parameters</p>
                 </div>
             </div>
             <div class="w-full sm:w-auto">
-                <select id="duration-filter" onchange="handleFilterChange(this.value)" class="w-full sm:w-64 bg-slate-50 border border-slate-200 text-slate-800 text-sm rounded-xl focus:ring-indigo-500 focus:border-indigo-500 block p-2.5 font-semibold shadow-sm transition-all cursor-pointer outline-none">
+                <select id="duration-filter" onchange="handleFilterChange(this.value)" class="w-full sm:w-64 bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm rounded-xl block p-2.5 font-semibold outline-none text-slate-800 dark:text-slate-100">
                     <option value="all">All Uploaded History</option>
                     <option value="last3">Last 3 Months (Quarterly)</option>
                     <optgroup id="specific-months-group" label="Analyze Specific Month"></optgroup>
@@ -72,41 +83,41 @@
 
         <section id="metrics-section" class="hidden grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <div class="glass-card p-6 rounded-3xl premium-shadow hover-lift flex flex-col justify-between relative overflow-hidden border-t-4 border-t-indigo-500">
-                <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Total Payable (Selected)</span>
-                <span id="metric-price" class="text-3xl font-extrabold text-slate-900 my-1 tracking-tight">-</span>
-                <span class="text-xs text-indigo-700 font-semibold bg-indigo-50 w-max px-2 py-1 rounded mt-2" id="metric-price-sub">Aggregate Value</span>
+                <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Total Payable</span>
+                <span id="metric-price" class="text-3xl font-extrabold my-1 tracking-tight">-</span>
+                <span class="text-xs text-indigo-700 dark:text-indigo-400 font-semibold bg-indigo-50 dark:bg-slate-800 w-max px-2 py-1 rounded mt-2" id="metric-price-sub">-</span>
             </div>
             <div class="glass-card p-6 rounded-3xl premium-shadow hover-lift flex flex-col justify-between border-t-4 border-t-sky-400">
                 <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Energy Consumed</span>
-                <span id="metric-consumption" class="text-3xl font-extrabold text-slate-900 my-1 tracking-tight">-</span>
-                <span class="text-xs text-sky-700 font-semibold bg-sky-50 w-max px-2 py-1 rounded mt-2">Active Power (KWH)</span>
+                <span id="metric-consumption" class="text-3xl font-extrabold my-1 tracking-tight">-</span>
+                <span class="text-xs text-sky-700 dark:text-sky-400 font-semibold bg-sky-50 dark:bg-slate-800 w-max px-2 py-1 rounded mt-2">Active Power (KWH)</span>
             </div>
             <div class="glass-card p-6 rounded-3xl premium-shadow hover-lift flex flex-col justify-between border-t-4 border-t-rose-500">
                 <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Highest Peak Demand</span>
                 <span id="metric-demand" class="text-3xl font-extrabold text-rose-600 my-1 tracking-tight">-</span>
-                <span class="text-xs text-rose-700 font-semibold bg-rose-50 w-max px-2 py-1 rounded mt-2" id="metric-demand-sub">Status Alert</span>
+                <span class="text-xs text-rose-700 font-semibold bg-rose-50 dark:bg-slate-800 w-max px-2 py-1 rounded mt-2" id="metric-demand-sub">-</span>
             </div>
             <div class="glass-card p-6 rounded-3xl premium-shadow hover-lift flex flex-col justify-between border-t-4 border-t-emerald-400">
                 <span class="text-[10px] font-bold text-slate-400 tracking-widest uppercase mb-1">Avg Power Factor</span>
                 <span id="metric-pf" class="text-3xl font-extrabold text-emerald-500 my-1 tracking-tight">0.99</span>
-                <span class="text-xs text-emerald-700 font-semibold bg-emerald-50 w-max px-2 py-1 rounded mt-2">Highly Efficient</span>
+                <span class="text-xs text-emerald-700 dark:text-emerald-400 font-semibold bg-emerald-50 dark:bg-slate-800 w-max px-2 py-1 rounded mt-2">Highly Efficient</span>
             </div>
         </section>
 
-        <section id="insights-section" class="hidden glass-card p-6 rounded-3xl premium-shadow bg-gradient-to-br from-indigo-50/50 to-white">
+        <section id="insights-section" class="hidden glass-card p-6 rounded-3xl premium-shadow bg-gradient-to-br from-indigo-50/50 to-white dark:from-slate-900 dark:to-slate-900/40">
             <div class="flex items-center gap-2 mb-4">
-                <div class="p-1.5 bg-indigo-100 rounded-md"><svg class="w-4 h-4 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-                <h3 class="text-sm font-bold text-indigo-900 uppercase tracking-widest">AI-Driven Automated Insights</h3>
+                <div class="p-1.5 bg-indigo-100 dark:bg-slate-800 rounded-md"><svg class="w-4 h-4 text-indigo-600 dark:text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+                <h3 class="text-sm font-bold text-indigo-900 dark:text-indigo-400 uppercase tracking-widest">AI-Driven Automated Insights</h3>
             </div>
-            <div id="dynamic-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-slate-700"></div>
+            <div id="dynamic-insights" class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm"></div>
         </section>
 
         <section id="visual-section" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div class="lg:col-span-2 space-y-8">
                 <div class="glass-card p-6 rounded-3xl premium-shadow">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-base font-bold text-slate-800">Financial Volatility Trend</h3>
-                        <span class="text-xs font-semibold text-indigo-700 bg-indigo-50 px-3 py-1 rounded-full">Bill Price (₹)</span>
+                        <h3 class="text-base font-bold">Financial Volatility Trend</h3>
+                        <span class="text-xs font-semibold text-indigo-700 dark:text-indigo-400 bg-indigo-50 dark:bg-slate-800 px-3 py-1 rounded-full">Bill Price (₹)</span>
                     </div>
                     <div class="relative w-full h-[240px]">
                         <canvas id="priceLineChart"></canvas>
@@ -114,8 +125,8 @@
                 </div>
                 <div class="glass-card p-6 rounded-3xl premium-shadow">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-base font-bold text-slate-800">Peak Demand Analysis</h3>
-                        <span class="text-xs font-semibold text-rose-700 bg-rose-50 px-3 py-1 rounded-full">Usage vs Limit (kVA)</span>
+                        <h3 class="text-base font-bold">Peak Demand Analysis</h3>
+                        <span class="text-xs font-semibold text-rose-700 dark:text-rose-400 bg-rose-50 dark:bg-slate-800 px-3 py-1 rounded-full">Usage vs Limit (kVA)</span>
                     </div>
                     <div class="relative w-full h-[240px]">
                         <canvas id="demandLineChart"></canvas>
@@ -123,8 +134,8 @@
                 </div>
                 <div class="glass-card p-6 rounded-3xl premium-shadow">
                     <div class="flex justify-between items-center mb-6">
-                        <h3 class="text-base font-bold text-slate-800">Power Consumption Profile</h3>
-                        <span class="text-xs font-semibold text-sky-700 bg-sky-50 px-3 py-1 rounded-full">Usage (kWh)</span>
+                        <h3 class="text-base font-bold">Power Consumption Profile</h3>
+                        <span class="text-xs font-semibold text-sky-700 dark:text-sky-400 bg-sky-50 dark:bg-slate-800 px-3 py-1 rounded-full">Usage (kWh)</span>
                     </div>
                     <div class="relative w-full h-[240px]">
                         <canvas id="consumptionBarChart"></canvas>
@@ -134,16 +145,15 @@
 
             <div class="lg:col-span-1 space-y-8">
                 <div class="glass-card p-6 rounded-3xl premium-shadow flex flex-col">
-                    <h3 class="text-base font-bold text-slate-800 mb-1">Cost Structure Analysis</h3>
-                    <p class="text-[11px] text-slate-500 mb-6 uppercase tracking-wider font-semibold">Aggregate breakdown</p>
+                    <h3 class="text-base font-bold mb-1">Cost Structure Analysis</h3>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Aggregate breakdown</p>
                     <div class="relative w-full min-h-[260px] flex items-center justify-center">
                         <canvas id="costChart"></canvas>
                     </div>
                 </div>
-                
                 <div class="glass-card p-6 rounded-3xl premium-shadow flex flex-col h-[360px]">
-                    <h3 class="text-base font-bold text-slate-800 mb-1">Time of Day (TOD) Profile</h3>
-                    <p class="text-[11px] text-slate-500 mb-4 uppercase tracking-wider font-semibold">Peak vs Off-Peak Usage</p>
+                    <h3 class="text-base font-bold mb-1">Time of Day (TOD) Profile</h3>
+                    <p class="text-[11px] text-slate-500 uppercase tracking-wider font-semibold">Peak vs Off-Peak Usage</p>
                     <div class="relative w-full h-[260px] flex items-center justify-center" id="tod-chart-container">
                         <canvas id="todChart"></canvas>
                     </div>
@@ -152,16 +162,16 @@
         </section>
 
         <section id="data-tables-section" class="hidden glass-card rounded-3xl premium-shadow overflow-hidden">
-            <div class="flex border-b border-slate-200 bg-slate-50/50 overflow-x-auto p-2 gap-2">
-                <button onclick="switchTab('history-tab')" id="btn-history-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-bold text-sm bg-white shadow-sm rounded-xl text-indigo-700 transition-all">Duration Ledger</button>
-                <button onclick="switchTab('billing-tab')" id="btn-billing-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 transition-all">Aggregate Billing Items</button>
-                <button onclick="switchTab('summary-tab')" id="btn-summary-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 transition-all">Executive Bill Summary</button>
+            <div class="flex border-b border-slate-200 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-900/50 overflow-x-auto p-2 gap-2">
+                <button onclick="switchTab('history-tab')" id="btn-history-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-bold text-sm bg-white dark:bg-slate-800 shadow-sm rounded-xl text-indigo-700 dark:text-indigo-400 transition-all">Duration Ledger</button>
+                <button onclick="switchTab('billing-tab')" id="btn-billing-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all">Aggregate Billing Items</button>
+                <button onclick="switchTab('summary-tab')" id="btn-summary-tab" class="tab-btn whitespace-nowrap px-6 py-2.5 font-semibold text-sm rounded-xl text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition-all">Executive Bill Summary</button>
             </div>
 
             <div id="history-tab" class="tab-content block p-6 overflow-x-auto">
                 <table class="w-full text-left text-sm whitespace-nowrap">
                     <thead>
-                        <tr class="border-b border-slate-200 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                        <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
                             <th class="pb-3 pl-2">Billing Period</th>
                             <th class="pb-3 text-right">Consumption (kWh)</th>
                             <th class="pb-3 text-right">Max Demand (kVA)</th>
@@ -169,20 +179,20 @@
                             <th class="pb-3 text-right pr-2">Efficiency Rate</th>
                         </tr>
                     </thead>
-                    <tbody id="history-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                    <tbody id="history-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
                 </table>
             </div>
 
             <div id="billing-tab" class="tab-content hidden p-6 overflow-x-auto">
                 <table class="w-full text-left text-sm">
                     <thead>
-                        <tr class="border-b border-slate-200 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
+                        <tr class="border-b border-slate-200 dark:border-slate-700 text-slate-400 font-bold text-[10px] uppercase tracking-wider">
                             <th class="pb-3 pl-2">Cost Component</th>
                             <th class="pb-3 text-right">Calculation Basis</th>
                             <th class="pb-3 text-right pr-2">Aggregate Amount (₹)</th>
                         </tr>
                     </thead>
-                    <tbody id="billing-table-body" class="divide-y divide-slate-100 text-slate-700"></tbody>
+                    <tbody id="billing-table-body" class="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300"></tbody>
                 </table>
             </div>
 
@@ -196,6 +206,31 @@
     </main>
 
     <script>
+        let isDarkMode = false;
+        
+        function toggleTheme() {
+            const htmlEl = document.documentElement;
+            const sunIcon = document.getElementById('theme-sun');
+            const moonIcon = document.getElementById('theme-moon');
+            isDarkMode = !isDarkMode;
+            
+            if (isDarkMode) {
+                htmlEl.classList.add('dark');
+                sunIcon.classList.remove('hidden');
+                moonIcon.classList.add('hidden');
+                Chart.defaults.color = '#94a3b8';
+            } else {
+                htmlEl.classList.remove('dark');
+                sunIcon.classList.add('hidden');
+                moonIcon.classList.remove('hidden');
+                Chart.defaults.color = '#334155';
+            }
+            
+            if (allExtractedData.length > 0) {
+                updateDashboard([...allExtractedData], document.getElementById('metric-price-sub').innerText);
+            }
+        }
+
         function updateDateTime() {
             const now = new Date();
             document.getElementById('current-datetime').innerText = now.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' }) + ' | ' + now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
@@ -215,27 +250,24 @@
         function switchTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.replace('block', 'hidden'));
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.classList.remove('bg-white', 'shadow-sm', 'text-indigo-700', 'font-bold');
+                btn.classList.remove('bg-white', 'dark:bg-slate-800', 'shadow-sm', 'text-indigo-700', 'dark:text-indigo-400', 'font-bold');
                 btn.classList.add('text-slate-500', 'font-semibold');
             });
             document.getElementById(tabId).classList.replace('hidden', 'block');
             const activeBtn = document.getElementById('btn-' + tabId);
             activeBtn.classList.remove('text-slate-500', 'font-semibold');
-            activeBtn.classList.add('bg-white', 'shadow-sm', 'text-indigo-700', 'font-bold');
+            activeBtn.classList.add('bg-white', 'dark:bg-slate-800', 'shadow-sm', 'text-indigo-700', 'dark:text-indigo-400', 'font-bold');
         }
 
         async function handleFiles(files) {
             if (files.length < 1) return;
-            document.getElementById('upload-prompt').innerHTML = `<h2 class="text-2xl font-extrabold text-indigo-600 animate-pulse">Server Extracting Data from ${files.length} PDF(s)...</h2>`;
+            document.getElementById('upload-prompt').innerHTML = `<h2 class="text-2xl font-extrabold text-indigo-600 animate-pulse">Processing System Telemetry Data...</h2>`;
 
             const formData = new FormData();
-            for (let i = 0; i < files.length; i++) {
-                formData.append('files', files[i]);
-            }
+            for (let i = 0; i < files.length; i++) { formData.append('files', files[i]); }
 
             try {
                 const response = await fetch('/api/analyze', { method: 'POST', body: formData });
-                if (!response.ok) throw new Error('Backend failed');
                 const data = await response.json();
                 
                 document.getElementById('upload-prompt').classList.add('hidden');
@@ -247,11 +279,9 @@
 
                 allExtractedData = data;
                 populateFilterDropdown();
-                document.getElementById('duration-filter').value = 'all';
                 applyFilter('all');
-                
             } catch (error) {
-                document.getElementById('upload-prompt').innerHTML = `<h2 class="text-xl font-bold text-rose-600">Backend Error: Check Vercel logs.</h2>`;
+                document.getElementById('upload-prompt').innerHTML = `<h2 class="text-xl font-bold text-rose-600">Transmission Error. Verify Vercel execution modules.</h2>`;
             }
         }
 
@@ -272,11 +302,9 @@
         function applyFilter(mode, index = null) {
             let activeData = [];
             let filterText = "";
-
             if (mode === 'all') { activeData = [...allExtractedData]; filterText = `Aggregate (${activeData.length} Months)`; } 
             else if (mode === 'last3') { activeData = allExtractedData.slice(-3); filterText = `Aggregate (Last ${activeData.length} Months)`; } 
             else if (mode === 'specific') { activeData = [allExtractedData[index]]; filterText = `Single Month (${activeData[0].month})`; }
-
             updateDashboard(activeData, filterText);
         }
 
@@ -305,10 +333,10 @@
             const demandSub = document.getElementById('metric-demand-sub');
             if(peakDemandItem.demand > 2500) {
                 demandSub.innerText = `Limit Exceeded (${peakDemandItem.month})`;
-                demandSub.className = "text-[10px] text-white font-bold bg-rose-500 px-2 py-1 rounded uppercase tracking-wider mt-2";
+                demandSub.className = "text-[10px] text-white font-bold bg-rose-500 px-2 py-1 rounded uppercase mt-2";
             } else {
                 demandSub.innerText = `Within limits`;
-                demandSub.className = "text-[10px] text-emerald-700 font-bold bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider mt-2";
+                demandSub.className = "text-[10px] text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-100 dark:bg-slate-800 px-2 py-1 rounded uppercase mt-2";
             }
 
             generateBottomInsights(dataArray, sumPrice, sumCons, peakDemandItem, sumTod1, sumTod2, sumTod3, sumTod4);
@@ -337,23 +365,16 @@
                 todDoughnutChartInstance = new Chart(todCtx, {
                     type: 'doughnut',
                     data: {
-                        labels: ['TOD1 (Rebate Zone)', 'TOD2 (Peak Surcharge)', 'TOD3 (Off-Peak Rebate)', 'TOD4 (Evening Surcharge)'],
+                        labels: ['TOD1 (Rebate)', 'TOD2 (Peak)', 'TOD3 (Off-Peak)', 'TOD4 (Evening)'],
                         datasets: [{
                             data: chartData,
                             backgroundColor: ['#10b981', '#f59e0b', '#3b82f6', '#ef4444'],
-                            borderWidth: 2, borderColor: '#ffffff', hoverOffset: 4
+                            borderWidth: isDarkMode ? 0 : 2, borderColor: '#ffffff'
                         }]
                     },
                     options: { 
-                        responsive: true, 
-                        maintainAspectRatio: false, 
-                        cutout: '55%', 
-                        plugins: { 
-                            legend: { 
-                                position: 'bottom', 
-                                labels: { usePointStyle: true, padding: 8, font: { size: 10, family: 'Inter' } } 
-                            } 
-                        } 
+                        responsive: true, maintainAspectRatio: false, cutout: '55%', 
+                        plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 8, font: { size: 10 } } } } 
                     }
                 });
             }, 50);
@@ -368,40 +389,42 @@
 
             summaryDiv.innerHTML = `
                 <div class="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <h4 class="text-xs text-indigo-200 uppercase tracking-wider mb-2">Usage & Efficiency</h4>
-                    <p class="text-sm font-medium leading-relaxed">Company drew <span class="text-white font-bold">${formatNumber(sumCons)} kWh</span> at an effective blended rate of <span class="text-white font-bold">₹${avgRate}/kWh</span>.</p>
+                    <h4 class="text-xs text-indigo-300 uppercase mb-2">Usage Metrics</h4>
+                    <p class="text-sm">Drew <span class="text-white font-bold">${formatNumber(sumCons)} kWh</span> at a blended rate of <span class="text-white font-bold">₹${avgRate}/kWh</span>.</p>
                 </div>
                 <div class="p-4 bg-white/5 rounded-xl border border-white/10">
-                    <h4 class="text-xs text-indigo-200 uppercase tracking-wider mb-2">TOD Load Shifting</h4>
-                    <p class="text-sm font-medium leading-relaxed"><span class="text-emerald-400 font-bold">${offPeakPercent}%</span> of total power was consumed during Off-Peak (Rebate) hours, saving significant costs.</p>
+                    <h4 class="text-xs text-indigo-300 uppercase mb-2">TOD Profiles</h4>
+                    <p class="text-sm"><span class="text-emerald-400 font-bold">${offPeakPercent}%</span> of load ran during Off-Peak parameters, saving total liability indexes.</p>
                 </div>
                 <div class="p-4 ${peak.demand > 2500 ? 'bg-rose-500/20 border-rose-500/50' : 'bg-white/5 border-white/10'} rounded-xl border">
-                    <h4 class="text-xs ${peak.demand > 2500 ? 'text-rose-200' : 'text-indigo-200'} uppercase tracking-wider mb-2">Demand Management</h4>
-                    <p class="text-sm font-medium leading-relaxed">Peak demand hit <span class="text-white font-bold">${peak.demand} kVA</span>. ${peak.demand > 2500 ? 'This breached the 2500 kVA limit, incurring severe penalties.' : 'Safely within 2500 kVA contract limits.'}</p>
+                    <h4 class="text-xs uppercase mb-2">Demand Management</h4>
+                    <p class="text-sm">Spiked at <span class="text-white font-bold">${peak.demand} kVA</span>. ${peak.demand > 2500 ? 'Breached 2500 kVA cap parameters.' : 'Maintained within agreed grid parameters.'}</p>
                 </div>
             `;
 
             const insightsContainer = document.getElementById('dynamic-insights');
+            let gridColor = isDarkMode ? '#334155' : '#e2e8f0';
+            let textSecondary = isDarkMode ? '#cbd5e1' : '#1e293b';
+
             let insightsHtml = `
-                <div class="bg-white p-4 rounded-xl border border-indigo-100 shadow-sm border-l-4 border-l-indigo-500">
-                    <span class="block font-bold text-slate-800 mb-1">Cost Trajectory</span>
-                    Based on standard industrial metrics, maintaining a rate of <b>₹${avgRate} per kWh</b> requires strict adherence to Power Factor norms (0.99) to keep incentives active.
+                <div class="p-4 rounded-xl border border-indigo-100 dark:border-slate-800 shadow-sm border-l-4 border-l-indigo-500 bg-white dark:bg-slate-900">
+                    <span class="block font-bold mb-1">Cost Efficiency Tracker</span>
+                    Blended baseline values sit at <b>₹${avgRate} per kWh</b>. Keep power factors close to 0.99 to capture optimal discounts.
                 </div>
             `;
             if (data.length > 1) {
                 const diff = data[data.length-1].price - data[0].price;
                 const pct = data[0].price > 0 ? Math.abs((diff/data[0].price)*100).toFixed(1) : 0;
-                const isUp = diff > 0;
                 insightsHtml += `
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm border-l-4 ${isUp ? 'border-l-rose-500' : 'border-l-emerald-500'}">
-                    <span class="block font-bold text-slate-800 mb-1">Volatility Check</span>
-                    Net billing costs have <b>${isUp ? 'increased' : 'decreased'} by ${pct}%</b> between the start and end of this timeframe.
+                <div class="p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm border-l-4 ${diff > 0 ? 'border-l-rose-500' : 'border-l-emerald-500'} bg-white dark:bg-slate-900">
+                    <span class="block font-bold mb-1">Volatility Parameters</span>
+                    Energy billing index shifted by <b>${pct}%</b> over your active parameter duration grid.
                 </div>`;
             } else {
                 insightsHtml += `
-                <div class="bg-white p-4 rounded-xl border border-slate-100 shadow-sm border-l-4 ${peak.demand > 2500 ? 'border-l-rose-500' : 'border-l-emerald-500'}">
-                    <span class="block font-bold text-slate-800 mb-1">Demand Compliance Alert</span>
-                    ${peak.demand > 2500 ? `Capacity was exceeded by <b>${peak.demand - 2500} kVA</b>. Immediate load-smoothing is recommended to stop financial leakage.` : `Peak demand safely respected limits. No excess surcharges triggered.`}
+                <div class="p-4 rounded-xl border border-slate-100 dark:border-slate-800 shadow-sm border-l-4 ${peak.demand > 2500 ? 'border-l-rose-500' : 'border-l-emerald-500'} bg-white dark:bg-slate-900">
+                    <span class="block font-bold mb-1">Demand Matrix Review</span>
+                    ${peak.demand > 2500 ? `Contract limit exceeded by <b>${peak.demand - 2500} kVA</b>, triggering system demand surcharges.` : `Demand matrix satisfied your 2500 kVA structural limitation rules.`}
                 </div>`;
             }
             insightsContainer.innerHTML = insightsHtml;
@@ -409,13 +432,9 @@
 
         function renderTrendCharts(data) {
             const labels = data.map(d => d.month);
-            const pointRadius = data.length === 1 ? 8 : 5;
+            const gridColor = isDarkMode ? '#334155' : '#f1f5f9';
 
             const priceCtx = document.getElementById('priceLineChart').getContext('2d');
-            let gradient = priceCtx.createLinearGradient(0, 0, 0, 300);
-            gradient.addColorStop(0, 'rgba(79, 70, 229, 0.25)'); 
-            gradient.addColorStop(1, 'rgba(79, 70, 229, 0.0)');
-
             if (priceLineChartInstance) priceLineChartInstance.destroy(); 
             priceLineChartInstance = new Chart(priceCtx, {
                 type: 'line',
@@ -423,57 +442,32 @@
                     labels: labels,
                     datasets: [{
                         label: 'Amount (₹)', data: data.map(d => d.price),
-                        borderColor: '#4f46e5', borderWidth: 3, backgroundColor: gradient,
-                        tension: 0.4, fill: true, pointBackgroundColor: '#fff', 
-                        pointBorderColor: '#4f46e5', pointBorderWidth: 2, pointRadius: pointRadius
+                        borderColor: '#4f46e5', borderWidth: 3, fill: false, tension: 0.4
                     }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { border: {dash: [4, 4]}, grid: { color: '#f1f5f9' }, ticks: { callback: v => '₹' + (v/100000).toFixed(1) + 'L' } }, x: { grid: { display: false } } } }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false } } } }
             });
 
             const demandCtx = document.getElementById('demandLineChart').getContext('2d');
-            let demandGradient = demandCtx.createLinearGradient(0, 0, 0, 300);
-            demandGradient.addColorStop(0, 'rgba(225, 29, 72, 0.2)'); 
-            demandGradient.addColorStop(1, 'rgba(225, 29, 72, 0.0)');
-
             if (demandLineChartInstance) demandLineChartInstance.destroy();
             demandLineChartInstance = new Chart(demandCtx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [
-                        {
-                            label: 'Actual Demand (kVA)', data: data.map(d => d.demand),
-                            borderColor: '#e11d48', borderWidth: 3, backgroundColor: demandGradient,
-                            tension: 0.4, fill: true, pointBackgroundColor: '#fff', 
-                            pointBorderColor: '#e11d48', pointBorderWidth: 2, pointRadius: pointRadius
-                        },
-                        {
-                            label: 'Contract Limit (2500 kVA)', data: data.map(() => 2500),
-                            borderColor: '#94a3b8', borderWidth: 2, borderDash: [5, 5],
-                            pointRadius: 0, fill: false
-                        }
+                        { label: 'Demand (kVA)', data: data.map(d => d.demand), borderColor: '#e11d48', borderWidth: 3, fill: false },
+                        { label: 'Limit', data: data.map(() => 2500), borderColor: '#64748b', borderWidth: 2, borderDash: [5, 5], pointRadius: 0 }
                     ]
                 },
-                options: { 
-                    responsive: true, maintainAspectRatio: false, 
-                    plugins: { legend: { position: 'top', labels: { usePointStyle: true, boxWidth: 8, font: { size: 11, family: 'Inter' } } } }, 
-                    scales: { y: { border: {dash: [4, 4]}, grid: { color: '#f1f5f9' } }, x: { grid: { display: false } } } 
-                }
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false } } } }
             });
 
             const consumptionCtx = document.getElementById('consumptionBarChart').getContext('2d');
             if (consumptionBarChartInstance) consumptionBarChartInstance.destroy();
             consumptionBarChartInstance = new Chart(consumptionCtx, {
                 type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Energy (kWh)', data: data.map(d => d.consumption),
-                        backgroundColor: '#0ea5e9', borderRadius: 6, hoverBackgroundColor: '#0284c7', maxBarThickness: 35
-                    }]
-                },
-                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { border: {dash: [4, 4]}, grid: { color: '#f1f5f9' }, ticks: { callback: v => (v/1000).toFixed(0) + 'k' } }, x: { grid: { display: false } } } }
+                data: { labels: labels, datasets: [{ data: data.map(d => d.consumption), backgroundColor: '#0ea5e9' }] },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { grid: { color: gridColor } }, x: { grid: { display: false } } } }
             });
         }
 
@@ -483,14 +477,10 @@
             costDoughnutChartInstance = new Chart(costCtx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Fixed Charges', 'Demand Penalty', 'Energy Usage', 'Subsidies Applied'],
-                    datasets: [{
-                        data: chartData,
-                        backgroundColor: ['#334155', '#ef4444', '#4f46e5', '#10b981'],
-                        borderWidth: 2, borderColor: '#ffffff', hoverOffset: 4
-                    }]
+                    labels: ['Fixed Charges', 'Penalties', 'Usage', 'Subsidies'],
+                    datasets: [{ data: chartData, backgroundColor: ['#334155', '#ef4444', '#4f46e5', '#10b981'], borderWidth: isDarkMode ? 0 : 2 }]
                 },
-                options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, padding: 10, font: { size: 10, family: 'Inter' } } } } }
+                options: { responsive: true, maintainAspectRatio: false, cutout: '55%', plugins: { legend: { position: 'bottom', labels: { usePointStyle: true, font: { size: 10 } } } } }
             });
         }
 
@@ -499,30 +489,14 @@
             historyTbody.innerHTML = ''; 
             historyData.forEach(item => {
                 const effectiveRate = item.consumption > 0 ? (item.price / item.consumption).toFixed(2) : 0;
-                const isViolation = item.demand > 2500;
-                historyTbody.innerHTML += `
-                    <tr class="hover:bg-slate-50 transition-colors">
-                        <td class="py-4 pl-2 font-bold text-slate-800">${item.month}</td>
-                        <td class="py-4 text-right">${formatNumber(item.consumption)}</td>
-                        <td class="py-4 text-right ${isViolation ? 'text-rose-600 font-bold' : ''}">${item.demand}</td>
-                        <td class="py-4 text-right font-bold text-indigo-700">${formatCurrency(item.price)}</td>
-                        <td class="py-4 text-right pr-2 text-slate-500">₹${effectiveRate}</td>
-                    </tr>
-                `;
+                historyTbody.innerHTML += `<tr><td class="py-4 pl-2 font-bold">${item.month}</td><td class="py-4 text-right">${formatNumber(item.consumption)}</td><td class="py-4 text-right">${item.demand}</td><td class="py-4 text-right text-indigo-600 dark:text-indigo-400 font-bold">${formatCurrency(item.price)}</td><td class="py-4 text-right pr-2">₹${effectiveRate}</td></tr>`;
             });
 
             const billingTbody = document.getElementById('billing-table-body');
             billingTbody.innerHTML = ''; 
             billingData.forEach(item => {
-                let rowClass = item.isTotal ? 'bg-indigo-50 border-t border-indigo-200' : 'hover:bg-slate-50 transition-colors';
-                let textClass = item.isTotal ? 'text-indigo-900 font-extrabold text-lg' : (item.highlight ? 'text-emerald-600 font-semibold' : 'text-slate-800 font-medium');
-                billingTbody.innerHTML += `
-                    <tr class="${rowClass}">
-                        <td class="py-4 pl-2 ${textClass}">${item.component}</td>
-                        <td class="py-4 text-right text-slate-500 text-xs uppercase tracking-wider">${item.basis}</td>
-                        <td class="py-4 text-right pr-2 ${textClass}">${formatCurrency(item.amount)}</td>
-                    </tr>
-                `;
+                let rowClass = item.isTotal ? 'bg-indigo-50 dark:bg-slate-900 font-extrabold border-t' : '';
+                billingTbody.innerHTML += `<tr class="${rowClass}"><td class="py-4 pl-2">${item.component}</td><td class="py-4 text-right text-xs uppercase">${item.basis}</td><td class="py-4 text-right pr-2">${formatCurrency(item.amount)}</td></tr>`;
             });
         }
     </script>
